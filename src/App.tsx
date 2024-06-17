@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import ReactFlow, {
   Background,
   applyNodeChanges,
@@ -13,6 +13,7 @@ import ReactFlow, {
   Connection,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import { TextUpdaterNode } from './components/customNode';
 
 const initialNodes: Node<any, string | undefined>[] = [
   {
@@ -26,11 +27,19 @@ const initialNodes: Node<any, string | undefined>[] = [
     position: { x: 100, y: 100 },
     data: { label: 'World' },
   },
+  {
+    id: 'node-1',
+    type: 'textUpdater',
+    position: { x: 30, y: 30 },
+    data: { value: 123 },
+  },
 ];
 
 const initialEdges: Edge<any>[] = [];
 
 function App() {
+  const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
+
   const [nodes, setNodes] =
     useState<Node<any, string | undefined>[]>(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
@@ -60,6 +69,7 @@ function App() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
         fitView
       >
         <Background />
